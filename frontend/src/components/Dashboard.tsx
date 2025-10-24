@@ -1,6 +1,6 @@
 // ProjectList.tsx (Dashboard)
-import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import type { ProjectItem } from "../types/ProjectItem";
 import { Paginator } from "./pagination/Paginator";
 import { TopAppBar } from "./top-app-bar/TopAppBar";
@@ -16,6 +16,7 @@ export const Dashboard = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkMode, setBulkMode] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [loading, setLoading] = useState(true); // loader state
 
   // Filters
   const [ownerFilter, setOwnerFilter] = useState("");
@@ -80,9 +81,23 @@ export const Dashboard = () => {
     page * pageSize
   );
 
-  useEffect(() => {
-    fetchProjects();
+  const loadProjects = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchProjects();
+      setProjects(data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.error("Failed to fetch projects:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -93,6 +108,8 @@ export const Dashboard = () => {
         handleBulkDelete={handleBulkDelete}
         selectedIds={selectedIds}
         setOpenAddDialog={setOpenAddDialog}
+        loadProjects={loadProjects}
+        loading={loading}
       />
 
       {/* Filters + Sorting */}
@@ -110,19 +127,33 @@ export const Dashboard = () => {
         sortOrder={sortOrder}
       />
 
-      {/* Card Grid */}
-      <ProjectCardWrapper
-        projects={paginatedProjects}
-        handleDelete={handleDelete}
-        handleRecover={handleRecover}
-        toggleSelect={toggleSelect}
-        bulkMode={bulkMode}
-        selectedIds={selectedIds}
-      />
-      {/* Pagination */}
-      <Paginator page={page} setPage={setPage} totalPages={totalPages} />
-      {/* Bulk mode indicator */}
-      <BulkModeIndicator bulkMode={bulkMode} selectedIds={selectedIds} />
+      {/* Loader */}
+      {loading ? (
+        <Stack
+          sx={{ mt: 4 }}
+          alignItems="center"
+          justifyContent="center"
+          spacing={2}
+        >
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <>
+          {/* Card Grid */}
+          <ProjectCardWrapper
+            projects={paginatedProjects}
+            handleDelete={handleDelete}
+            handleRecover={handleRecover}
+            toggleSelect={toggleSelect}
+            bulkMode={bulkMode}
+            selectedIds={selectedIds}
+          />
+          {/* Pagination */}
+          <Paginator page={page} setPage={setPage} totalPages={totalPages} />
+          {/* Bulk mode indicator */}
+          <BulkModeIndicator bulkMode={bulkMode} selectedIds={selectedIds} />
+        </>
+      )}
       <AddProjectDialog
         open={openAddDialog}
         onClose={() => setOpenAddDialog(false)}

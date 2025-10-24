@@ -5,8 +5,10 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   bulkMode,
   setBulkMode,
   handleBulkDelete,
-  selectedIds, 
-  setOpenAddDialog
+  selectedIds,
+  setOpenAddDialog,
+  loadProjects,
+  loading,
 }) => {
   return (
     <Stack
@@ -39,6 +41,13 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
             </Button>
           </>
         )}
+        <Button
+          variant="contained"
+          onClick={() => loadProjects()}
+          disabled={loading}
+        >
+          Reload
+        </Button>
       </Stack>
     </Stack>
   );
