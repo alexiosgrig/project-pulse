@@ -7,8 +7,9 @@ const api = axios.create({
 });
 
 export const fetchProjects = async (): Promise<ProjectItem[]> => {
-  const response = await api.get("/");
-  return response.data;
+  const response = await api.get("/?page=1");
+  const { results } = response.data;
+  return results;
 };
 
 export const addProject = async (
