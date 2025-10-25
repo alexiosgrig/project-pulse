@@ -1,9 +1,10 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import type { FilteredSortingBarOwnerProps } from "../../types/props/FilteredSortingBarOwnerProps";
+import { memo } from "react";
 
 export const FilteredSortingBarOwner: React.FC<
   FilteredSortingBarOwnerProps
-> = ({ ownerFilter, setOwnerFilter, projects }) => {
+> = memo(({ ownerFilter, setOwnerFilter, projects }) => {
   return (
     <FormControl sx={{ minWidth: 120 }}>
       <InputLabel>Owner</InputLabel>
@@ -21,4 +22,4 @@ export const FilteredSortingBarOwner: React.FC<
       </Select>
     </FormControl>
   );
-};
+});

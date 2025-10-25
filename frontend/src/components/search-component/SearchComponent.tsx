@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  InputAdornment,
-} from "@mui/material";
+import { TextField, InputAdornment } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { searchProject } from "../../api/projectService";
 import type { SearchComponentProps } from "../../types/props/SearchComponentProps";
@@ -27,7 +24,7 @@ export const SearchComponent: React.FC<SearchComponentProps> = ({
     } else {
       setProjects([]); // clear when query empty
     }
-  }, [query]);
+  }, [query, setProjects]);
 
   return (
     <div style={{ maxWidth: 500, margin: "20px auto" }}>

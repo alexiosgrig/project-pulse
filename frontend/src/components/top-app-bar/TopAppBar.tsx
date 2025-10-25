@@ -2,10 +2,6 @@ import { Button, Stack, Typography } from "@mui/material";
 import type { TopAppBarProps } from "../../types/props/TopAppBarProps";
 
 export const TopAppBar: React.FC<TopAppBarProps> = ({
-  bulkMode,
-  setBulkMode,
-  handleBulkDelete,
-  selectedIds,
   setOpenAddDialog,
   loading,
   setOnReload,
@@ -22,25 +18,6 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
         <Button variant="contained" onClick={() => setOpenAddDialog(true)}>
           + Add Project
         </Button>
-        {!bulkMode ? (
-          <Button variant="outlined" onClick={() => setBulkMode(true)}>
-            Enable Bulk Actions
-          </Button>
-        ) : (
-          <>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleBulkDelete}
-              disabled={selectedIds.length === 0}
-            >
-              Delete Selected
-            </Button>
-            <Button variant="outlined" onClick={() => setBulkMode(false)}>
-              Cancel
-            </Button>
-          </>
-        )}
         <Button
           variant="contained"
           onClick={() => setOnReload((prev) => prev + 1)}
