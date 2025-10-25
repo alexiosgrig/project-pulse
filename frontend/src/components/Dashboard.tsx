@@ -5,11 +5,11 @@ import type { ProjectItem } from "../types/ProjectItem";
 import { Paginator } from "./pagination/Paginator";
 import { TopAppBar } from "./top-app-bar/TopAppBar";
 import { ProjectCardWrapper } from "./project-card-wrapper/ProjectCardWrapper";
-import { useFilteredProjects } from "../hooks/useFilteredProjects";
 import { FilteredSortingBar } from "./filterted-sorting-bar/FilteredSortingBar";
 import { BulkModeIndicator } from "./bulk-mode-indicator/BulkModeIndicator";
 import { AddProjectDialog } from "./add-project-dialog/AddProjectDialog";
 import { fetchProjectsByPage } from "../api/projectService";
+import type { FetchProjectsParams } from "../types/FetchProjectsParams";
 
 export const Dashboard = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([{} as ProjectItem]);
@@ -29,8 +29,17 @@ export const Dashboard = () => {
   const pageSize = 10;
 
   // Sorting
-  const [sortBy, setSortBy] = useState("title");
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const params: FetchProjectsParams = {
+    page: currentPage || 1,
+    owner: ownerFilter === "all" ? undefined : ownerFilter || undefined,
+    health: healthFilter === "all" ? undefined : healthFilter || undefined,
+    tag: tagFilter === "all" ? undefined : tagFilter || undefined,
+    order: sortBy,
+    dir: sortOrder,
+  };
 
   // Toggle selection for bulk actions
   const toggleSelect = (id: number) => {
@@ -64,37 +73,25 @@ export const Dashboard = () => {
     setBulkMode(false);
   };
 
-  // Apply filters + sorting
-  const filteredProjects = useFilteredProjects({
-    projects,
-    ownerFilter,
-    healthFilter,
-    tagFilter,
-    sortBy,
-    sortOrder,
-  });
-
   // Pagination
   const totalPages = Math.ceil(projectsCount / pageSize);
 
-  const fetchProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (params: FetchProjectsParams) => {
     setLoading(true);
     try {
-      const data = await fetchProjectsByPage(currentPage);
+      const data = await fetchProjectsByPage(params);
       setProjects(data?.results);
       setProjectsCount(data?.count);
-      setLoading(false);
     } catch (err) {
-      setLoading(false);
       console.error("Failed to fetch projects:", err);
     } finally {
       setLoading(false);
     }
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+    fetchProjects(params);
+  }, [currentPage, ownerFilter, healthFilter, tagFilter, sortOrder, sortBy]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -105,7 +102,6 @@ export const Dashboard = () => {
         handleBulkDelete={handleBulkDelete}
         selectedIds={selectedIds}
         setOpenAddDialog={setOpenAddDialog}
-        loadProjects={fetchProjects}
         loading={loading}
       />
 
@@ -150,7 +146,6 @@ export const Dashboard = () => {
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}
-            fetchProjects={fetchProjects}
           />
           {/* Bulk mode indicator */}
           <BulkModeIndicator bulkMode={bulkMode} selectedIds={selectedIds} />

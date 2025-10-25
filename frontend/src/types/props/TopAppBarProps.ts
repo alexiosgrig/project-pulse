@@ -6,6 +6,5 @@ export interface TopAppBarProps {
   setOpenAddDialog: Dispatch<SetStateAction<boolean>>;
   handleBulkDelete: any;
   selectedIds: number[];
-  loadProjects: () => void;
   loading: boolean;
 }

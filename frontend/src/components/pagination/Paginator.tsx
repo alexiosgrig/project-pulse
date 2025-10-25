@@ -6,11 +6,9 @@ export const Paginator: React.FC<PaginatorProps> = ({
   totalPages,
   setCurrentPage,
   currentPage,
-  fetchProjects
 }) => {
   const onChange = (page: number) => {
     setCurrentPage(page);
-    fetchProjects(page);
   };
   return (
     <>

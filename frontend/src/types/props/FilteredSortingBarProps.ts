@@ -9,8 +9,8 @@ export interface FilteredSortingBarProps {
   setHealthFilter: Dispatch<SetStateAction<string>>;
   tagFilter: string;
   setTagFilter: Dispatch<SetStateAction<string>>;
-  sortBy: string;
-  setSortBy: Dispatch<SetStateAction<string>>;
+  sortBy: string | undefined;
+  setSortBy: Dispatch<SetStateAction<string | undefined>>;
   setSortOrder: Dispatch<SetStateAction<string>>;
   sortOrder: string;
 }
