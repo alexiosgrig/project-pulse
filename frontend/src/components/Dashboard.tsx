@@ -12,7 +12,7 @@ import { AddProjectDialog } from "./add-project-dialog/AddProjectDialog";
 import { fetchProjects } from "../api/projectService";
 
 export const Dashboard = () => {
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>([{} as ProjectItem]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkMode, setBulkMode] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -53,7 +53,6 @@ export const Dashboard = () => {
     );
   };
 
-  // Bulk soft delete
   const handleBulkDelete = () => {
     setProjects((prev) =>
       prev.map((p) =>
@@ -157,7 +156,6 @@ export const Dashboard = () => {
       <AddProjectDialog
         open={openAddDialog}
         onClose={() => setOpenAddDialog(false)}
-        onAdd={(newProject) => setProjects((prev) => [...prev, newProject])}
       />
     </Box>
   );
