@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'django_filters',
+    'django_elasticsearch_dsl',
 
     # Your apps
     'projects',
@@ -111,4 +112,10 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter',
         'rest_framework.filters.SearchFilter',
     ]
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://localhost:9200'
+    },
 }
