@@ -1,21 +1,26 @@
 import axios from "axios";
 import type { ProjectItem } from "../types/ProjectItem";
 import type { PaginatedProjectsResponse } from "../types/PaginatedProjectsResponse";
+import type { FetchProjectsParams } from "../types/FetchProjectsParams";
 
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/projects", // change to your backend URL
   headers: { "Content-Type": "application/json" },
 });
 
-export const fetchProjects = async (): Promise<PaginatedProjectsResponse> => {
-  const response = await api.get("/");
+export const fetchProjects = async (
+  params: FetchProjectsParams
+): Promise<PaginatedProjectsResponse> => {
+  const response = await api.get("/", {
+    params,
+  });
   return response.data;
 };
 
 export const fetchProjectsByPage = async (
-  page: number
+  params: FetchProjectsParams
 ): Promise<PaginatedProjectsResponse> => {
-  const response = await api.get(`/?page=${page}`);
+  const response = await api.get("/", { params });
   return response.data;
 };
 
