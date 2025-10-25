@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   TextField,
-  List,
-  ListItem,
-  ListItemText,
   InputAdornment,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
@@ -48,12 +45,6 @@ export const SearchComponent: React.FC<SearchComponentProps> = ({
           ),
         }}
       />
-      {/* 
-      <List>
-        <ListItem divider>
-          <ListItemText primary={"dw"} secondary={"dwdw"} />
-        </ListItem>
-      </List> */}
     </div>
   );
 };
