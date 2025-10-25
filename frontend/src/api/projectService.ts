@@ -35,11 +35,18 @@ export const updateProject = async (
   project: ProjectItem
 ): Promise<ProjectItem> => {
   const response = await api.put(`/${project.id}`, project, {
-    headers: { "If-Match": project.version.toString() }, // optimistic concurrency
+    headers: { "If-Match": project.version.toString() },
   });
   return response.data;
 };
 
 export const deleteProject = async (id: number): Promise<void> => {
   await api.delete(`/${id}/`);
+};
+
+export const searchProject = async (
+  query: string
+): Promise<PaginatedProjectsResponse> => {
+  const response = await api.get(`/search/?q=${query}`);
+  return response.data;
 };

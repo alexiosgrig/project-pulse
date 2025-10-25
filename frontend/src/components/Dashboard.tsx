@@ -10,6 +10,7 @@ import { BulkModeIndicator } from "./bulk-mode-indicator/BulkModeIndicator";
 import { AddProjectDialog } from "./add-project-dialog/AddProjectDialog";
 import { fetchProjectsByPage } from "../api/projectService";
 import type { FetchProjectsParams } from "../types/FetchProjectsParams";
+import { SearchComponent } from "./search-component/SearchComponent";
 
 export const Dashboard = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([{} as ProjectItem]);
@@ -115,7 +116,7 @@ export const Dashboard = () => {
         loading={loading}
         setOnReload={setOnReload}
       />
-
+      <SearchComponent setProjects={setProjects}/>
       {/* Filters + Sorting */}
       <FilteredSortingBar
         ownerFilter={ownerFilter}
