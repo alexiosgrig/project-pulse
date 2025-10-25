@@ -6,7 +6,8 @@ export interface TeamMember {
 }
 
 export interface PaginatorProps {
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
   totalPages: number;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
+  currentPage: number;
+  fetchProjects: (value: number) => void;
 }
