@@ -5,14 +5,15 @@ import type { ProjectItem } from "../types/ProjectItem";
 import { Paginator } from "./pagination/Paginator";
 import { TopAppBar } from "./top-app-bar/TopAppBar";
 import { ProjectCardWrapper } from "./project-card-wrapper/ProjectCardWrapper";
-import { useFilteredProjects } from "../hooks/useFilteredProjects";
 import { FilteredSortingBar } from "./filterted-sorting-bar/FilteredSortingBar";
 import { BulkModeIndicator } from "./bulk-mode-indicator/BulkModeIndicator";
 import { AddProjectDialog } from "./add-project-dialog/AddProjectDialog";
-import { fetchProjects } from "../api/projectService";
+import { fetchProjectsByPage } from "../api/projectService";
+import type { FetchProjectsParams } from "../types/FetchProjectsParams";
 
 export const Dashboard = () => {
-  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>([{} as ProjectItem]);
+  const [projectsCount, setProjectsCount] = useState(0);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkMode, setBulkMode] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -24,12 +25,21 @@ export const Dashboard = () => {
   const [tagFilter, setTagFilter] = useState("");
 
   // Pagination
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
 
   // Sorting
-  const [sortBy, setSortBy] = useState("title");
+  const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const params: FetchProjectsParams = {
+    page: currentPage || 1,
+    owner: ownerFilter === "all" ? undefined : ownerFilter || undefined,
+    health: healthFilter === "all" ? undefined : healthFilter || undefined,
+    tag: tagFilter === "all" ? undefined : tagFilter || undefined,
+    order: sortBy,
+    dir: sortOrder,
+  };
 
   // Toggle selection for bulk actions
   const toggleSelect = (id: number) => {
@@ -53,7 +63,6 @@ export const Dashboard = () => {
     );
   };
 
-  // Bulk soft delete
   const handleBulkDelete = () => {
     setProjects((prev) =>
       prev.map((p) =>
@@ -64,31 +73,16 @@ export const Dashboard = () => {
     setBulkMode(false);
   };
 
-  // Apply filters + sorting
-  const filteredProjects = useFilteredProjects({
-    projects,
-    ownerFilter,
-    healthFilter,
-    tagFilter,
-    sortBy,
-    sortOrder,
-  });
-
   // Pagination
-  const totalPages = Math.ceil(filteredProjects.length / pageSize);
-  const paginatedProjects = filteredProjects.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  const totalPages = Math.ceil(projectsCount / pageSize);
 
-  const loadProjects = useCallback(async () => {
+  const fetchProjects = useCallback(async (params: FetchProjectsParams) => {
     setLoading(true);
     try {
-      const data = await fetchProjects();
-      setProjects(data);
-      setLoading(false);
+      const data = await fetchProjectsByPage(params);
+      setProjects(data?.results);
+      setProjectsCount(data?.count);
     } catch (err) {
-      setLoading(false);
       console.error("Failed to fetch projects:", err);
     } finally {
       setLoading(false);
@@ -96,8 +90,8 @@ export const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    loadProjects();
-  }, [loadProjects]);
+    fetchProjects(params);
+  }, [currentPage, ownerFilter, healthFilter, tagFilter, sortOrder, sortBy]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -108,7 +102,6 @@ export const Dashboard = () => {
         handleBulkDelete={handleBulkDelete}
         selectedIds={selectedIds}
         setOpenAddDialog={setOpenAddDialog}
-        loadProjects={loadProjects}
         loading={loading}
       />
 
@@ -116,7 +109,7 @@ export const Dashboard = () => {
       <FilteredSortingBar
         ownerFilter={ownerFilter}
         setOwnerFilter={setOwnerFilter}
-        projects={paginatedProjects}
+        projects={projects}
         healthFilter={healthFilter}
         setHealthFilter={setHealthFilter}
         tagFilter={tagFilter}
@@ -141,7 +134,7 @@ export const Dashboard = () => {
         <>
           {/* Card Grid */}
           <ProjectCardWrapper
-            projects={paginatedProjects}
+            projects={projects}
             handleDelete={handleDelete}
             handleRecover={handleRecover}
             toggleSelect={toggleSelect}
@@ -149,7 +142,11 @@ export const Dashboard = () => {
             selectedIds={selectedIds}
           />
           {/* Pagination */}
-          <Paginator page={page} setPage={setPage} totalPages={totalPages} />
+          <Paginator
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+          />
           {/* Bulk mode indicator */}
           <BulkModeIndicator bulkMode={bulkMode} selectedIds={selectedIds} />
         </>
@@ -157,7 +154,6 @@ export const Dashboard = () => {
       <AddProjectDialog
         open={openAddDialog}
         onClose={() => setOpenAddDialog(false)}
-        onAdd={(newProject) => setProjects((prev) => [...prev, newProject])}
       />
     </Box>
   );

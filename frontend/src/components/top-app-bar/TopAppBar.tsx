@@ -7,7 +7,6 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   handleBulkDelete,
   selectedIds,
   setOpenAddDialog,
-  loadProjects,
   loading,
 }) => {
   return (
@@ -43,7 +42,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
         )}
         <Button
           variant="contained"
-          onClick={() => loadProjects()}
+          onClick={() => console.log('')}
           disabled={loading}
         >
           Reload

@@ -18,11 +18,11 @@ import {
 import { Add, Delete } from "@mui/icons-material";
 import type { ProjectItem, TeamMember } from "../../types/ProjectItem";
 import type { AddProjectDialogProps } from "../../types/props/AddProjectDialogProps";
+import { addProject } from "../../api/projectService";
 
 export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
   open,
   onClose,
-  onAdd,
 }) => {
   const [form, setForm] = useState({
     title: "",
@@ -86,9 +86,8 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newProject: ProjectItem = {
-      id: Date.now(),
       title: form.title,
       description: form.description,
       summary: form.summary || `New project: ${form.title}`,
@@ -107,7 +106,11 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
       version: form.version,
     };
 
-    onAdd(newProject);
+    try {
+      await addProject(newProject);
+    } catch (error) {
+      console.log(error);
+    }
     onClose();
     setForm({
       title: "",

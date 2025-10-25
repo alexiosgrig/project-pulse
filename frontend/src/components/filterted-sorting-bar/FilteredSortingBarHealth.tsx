@@ -2,11 +2,9 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import React from "react";
 import type { FilteredSortingBarHealthProps } from "../../types/props/FilteredSortingBarHealthProps";
 
-export const FilteredSortingBarHealth: React.FC<FilteredSortingBarHealthProps> = ({
-  menuItemList,
-  healthFilter,
-  setHealthFilter,
-}) => {
+export const FilteredSortingBarHealth: React.FC<
+  FilteredSortingBarHealthProps
+> = ({ menuItemList, healthFilter, setHealthFilter }) => {
   return (
     <FormControl sx={{ minWidth: 120 }}>
       <InputLabel>Health</InputLabel>

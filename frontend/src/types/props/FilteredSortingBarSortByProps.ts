@@ -6,7 +6,7 @@ type MenuItem = {
 };
 
 export interface FilteredSortingBarSortByProps {
-  sortBy: string;
-  setSortBy: Dispatch<SetStateAction<string>>;
+  sortBy: string | undefined;
+  setSortBy: Dispatch<SetStateAction<string | undefined>>;
   menuItemList: MenuItem[];
 }

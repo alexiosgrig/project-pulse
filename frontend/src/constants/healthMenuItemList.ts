@@ -1,7 +1,6 @@
 export const healthMenuItemList = [
-  { value: "", label: "All" },
-  { value: "health", label: "Health" },
-  { value: "good", label: "Good" },
-  { value: "moderate", label: "Moderate" },
-  { value: "critical", label: "Critical" },
+  { value: "all", label: "All" },
+  { value: "Good", label: "Good" },
+  { value: "Moderate", label: "Moderate" },
+  { value: "Critical", label: "Critical" },
 ];
