@@ -8,6 +8,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
   selectedIds,
   setOpenAddDialog,
   loading,
+  setOnReload,
 }) => {
   return (
     <Stack
@@ -42,7 +43,7 @@ export const TopAppBar: React.FC<TopAppBarProps> = ({
         )}
         <Button
           variant="contained"
-          onClick={() => console.log('')}
+          onClick={() => setOnReload((prev) => prev + 1)}
           disabled={loading}
         >
           Reload

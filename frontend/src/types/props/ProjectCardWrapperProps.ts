@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from "react";
 import type { ProjectItem } from "../ProjectItem";
 
 export interface ProjectCardWrapperProps {
@@ -7,4 +8,5 @@ export interface ProjectCardWrapperProps {
   handleDelete: (id: any) => void;
   toggleSelect: (id: any) => void;
   selectedIds: number[];
+  setOnReload: Dispatch<SetStateAction<number>>;
 }

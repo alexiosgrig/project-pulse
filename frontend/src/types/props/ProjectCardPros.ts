@@ -1,3 +1,4 @@
+import type { Dispatch, SetStateAction } from "react";
 import type { ProjectItem } from "../ProjectItem";
 
 export interface ProjectCardProps {
@@ -5,5 +6,5 @@ export interface ProjectCardProps {
   bulkMode: boolean;
   selected: boolean;
   onSelect: () => void;
-  onDelete: () => void;
+  setOnReload: Dispatch<SetStateAction<number >>;
 }

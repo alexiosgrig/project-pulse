@@ -1,15 +1,14 @@
 import React from "react";
-import { ProjectCard } from "../ProjectCard";
+import { ProjectCard } from "../project-card/ProjectCard";
 import type { ProjectCardWrapperProps } from "../../types/props/ProjectCardWrapperProps";
 import { Grid } from "@mui/material";
 
 export const ProjectCardWrapper: React.FC<ProjectCardWrapperProps> = ({
   projects,
   bulkMode,
-  handleRecover,
-  handleDelete,
   toggleSelect,
   selectedIds,
+  setOnReload
 }) => {
   return (
     <Grid container spacing={2}>
@@ -20,11 +19,7 @@ export const ProjectCardWrapper: React.FC<ProjectCardWrapperProps> = ({
           bulkMode={bulkMode}
           selected={selectedIds.includes(project.id)}
           onSelect={() => toggleSelect(project.id)}
-          onDelete={() =>
-            project.deleted
-              ? handleRecover(project.id)
-              : handleDelete(project.id)
-          }
+          setOnReload={setOnReload}
         />
       ))}
     </Grid>
