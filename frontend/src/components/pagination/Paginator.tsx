@@ -1,25 +1,26 @@
+import React, { memo, useCallback } from "react";
 import { Pagination, Stack } from "@mui/material";
-import React from "react";
 import type { PaginatorProps } from "../../types/props/PaginatorProps";
 
-export const Paginator: React.FC<PaginatorProps> = ({
-  totalPages,
-  setCurrentPage,
-  currentPage,
-}) => {
-  const onChange = (page: number) => {
-    setCurrentPage(page);
-  };
-  return (
-    <>
+export const Paginator: React.FC<PaginatorProps> = memo(
+  ({ totalPages, setCurrentPage, currentPage }) => {
+    // ✅ Stable callback — prevents re-creating function each render
+    const handleChange = useCallback(
+      (_: React.ChangeEvent<unknown>, value: number) => {
+        setCurrentPage(value);
+      },
+      [setCurrentPage]
+    );
+
+    return (
       <Stack alignItems="center" sx={{ mt: 3 }}>
         <Pagination
           count={totalPages}
           page={currentPage}
-          onChange={(e, value) => onChange(value)}
+          onChange={handleChange}
           color="primary"
         />
       </Stack>
-    </>
-  );
-};
+    );
+  }
+);

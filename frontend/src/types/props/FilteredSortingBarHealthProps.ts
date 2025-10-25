@@ -1,7 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
+import type { MenuItem } from "../MenuItem";
 
 export interface FilteredSortingBarHealthProps {
-  menuItemList: any[];
+  menuItemList: MenuItem[];
   healthFilter: string;
   setHealthFilter: Dispatch<SetStateAction<string>>;
 }

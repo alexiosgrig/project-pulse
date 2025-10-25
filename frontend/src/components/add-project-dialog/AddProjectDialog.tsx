@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -20,7 +20,7 @@ import type { ProjectItem, TeamMember } from "../../types/ProjectItem";
 import type { AddProjectDialogProps } from "../../types/props/AddProjectDialogProps";
 import { addProject } from "../../api/projectService";
 
-export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
+export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
   open,
   onClose,
 }) => {
@@ -33,14 +33,14 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
     milestones: 0,
     team: [{ role: "Project Manager", capacity: 1 }],
     tags: [] as string[],
-    health: "Good" as "Good" | "Moderate" | "Critical",
+    health: "Good",
     recentActivities: [] as string[],
     deleted: false,
     version: 1,
   });
 
   // --- Team Handlers ---
-  const handleTeamChange = (
+  const handleTeamChange = useCallback((
     index: number,
     key: keyof TeamMember,
     value: any
@@ -48,30 +48,30 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
     const newTeam = [...form.team];
     newTeam[index][key] = value;
     setForm({ ...form, team: newTeam });
-  };
+  }, [form]);
 
-  const handleAddTeamMember = () => {
+  const handleAddTeamMember = useCallback(() => {
     setForm({ ...form, team: [...form.team, { role: "", capacity: 1 }] });
-  };
+  }, [form]);
 
-  const handleRemoveTeamMember = (index: number) => {
+  const handleRemoveTeamMember = useCallback((index: number) => {
     const newTeam = form.team.filter((_, i) => i !== index);
     setForm({ ...form, team: newTeam });
-  };
+  }, [form]);
 
   // --- Tags Handlers ---
-  const handleAddTag = (tag: string) => {
+  const handleAddTag = useCallback((tag: string) => {
     if (tag && !form.tags.includes(tag)) {
       setForm({ ...form, tags: [...form.tags, tag] });
     }
-  };
+  }, [form]);
 
-  const handleRemoveTag = (tag: string) => {
+  const handleRemoveTag = useCallback((tag: string) => {
     setForm({ ...form, tags: form.tags.filter((t) => t !== tag) });
-  };
+  }, [form]);
 
   // --- Generic field change ---
-  const handleChange = (
+  const handleChange = useCallback((
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type, checked } = e.target;
@@ -84,9 +84,9 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
           ? +value
           : value,
     }));
-  };
+  }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const newProject: ProjectItem = {
       title: form.title,
       description: form.description,
@@ -126,7 +126,7 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
       deleted: false,
       version: 1,
     });
-  };
+  }, [form, onClose]);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -275,4 +275,4 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = ({
       </DialogActions>
     </Dialog>
   );
-};
+});
