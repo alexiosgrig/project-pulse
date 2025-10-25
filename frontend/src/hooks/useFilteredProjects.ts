@@ -20,12 +20,12 @@ export const useFilteredProjects = ({
 }: UseFilteredProjectsProps) => {
   const filteredProjects = useMemo(() => {
     const filtered = projects
-      .filter((p) => !p.deleted)
-      .filter((p) => (ownerFilter ? p.owner === ownerFilter : true))
-      .filter((p) => (healthFilter ? p.health === healthFilter : true))
-      .filter((p) => (tagFilter ? p.tags.includes(tagFilter) : true));
+      ?.filter((p) => !p.deleted)
+      ?.filter((p) => (ownerFilter ? p?.owner === ownerFilter : true))
+      ?.filter((p) => (healthFilter ? p?.health === healthFilter : true))
+      ?.filter((p) => (tagFilter ? p?.tags.includes(tagFilter) : true));
 
-    return filtered.sort((a, b) => {
+    return filtered?.sort((a, b) => {
       let aValue: any;
       let bValue: any;
 
