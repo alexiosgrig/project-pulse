@@ -18,7 +18,7 @@ export const Dashboard = () => {
   const [bulkMode, setBulkMode] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [loading, setLoading] = useState(true); // loader state
-
+  const [onReload, setOnReload] = useState(0);
   // Filters
   const [ownerFilter, setOwnerFilter] = useState("");
   const [healthFilter, setHealthFilter] = useState("");
@@ -88,10 +88,20 @@ export const Dashboard = () => {
       setLoading(false);
     }
   }, []);
+  console.log(onReload, "onReload");
 
   useEffect(() => {
+    console.log(onReload);
     fetchProjects(params);
-  }, [currentPage, ownerFilter, healthFilter, tagFilter, sortOrder, sortBy]);
+  }, [
+    currentPage,
+    ownerFilter,
+    healthFilter,
+    tagFilter,
+    sortOrder,
+    sortBy,
+    onReload,
+  ]);
 
   return (
     <Box sx={{ p: 2 }}>
@@ -103,6 +113,7 @@ export const Dashboard = () => {
         selectedIds={selectedIds}
         setOpenAddDialog={setOpenAddDialog}
         loading={loading}
+        setOnReload={setOnReload}
       />
 
       {/* Filters + Sorting */}
@@ -140,6 +151,7 @@ export const Dashboard = () => {
             toggleSelect={toggleSelect}
             bulkMode={bulkMode}
             selectedIds={selectedIds}
+            setOnReload={setOnReload}
           />
           {/* Pagination */}
           <Paginator

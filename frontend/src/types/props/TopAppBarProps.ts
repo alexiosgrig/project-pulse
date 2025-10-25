@@ -7,4 +7,5 @@ export interface TopAppBarProps {
   handleBulkDelete: any;
   selectedIds: number[];
   loading: boolean;
+  setOnReload: Dispatch<SetStateAction<number>>;
 }
