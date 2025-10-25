@@ -1,8 +1,8 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import type { FilteredSortingBarTagProps } from "../../types/props/FilteredSortingBarTagProps";
 
-export const FilteredSortingBarTag: React.FC<FilteredSortingBarTagProps> = ({
+export const FilteredSortingBarTag: React.FC<FilteredSortingBarTagProps> = memo(({
   tagFilter,
   setTagFilter,
   projects,
@@ -24,4 +24,4 @@ export const FilteredSortingBarTag: React.FC<FilteredSortingBarTagProps> = ({
       </Select>
     </FormControl>
   );
-};
+});

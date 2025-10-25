@@ -1,12 +1,11 @@
 // ProjectList.tsx (Dashboard)
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import type { ProjectItem } from "../types/ProjectItem";
 import { Paginator } from "./pagination/Paginator";
 import { TopAppBar } from "./top-app-bar/TopAppBar";
 import { ProjectCardWrapper } from "./project-card-wrapper/ProjectCardWrapper";
 import { FilteredSortingBar } from "./filterted-sorting-bar/FilteredSortingBar";
-import { BulkModeIndicator } from "./bulk-mode-indicator/BulkModeIndicator";
 import { AddProjectDialog } from "./add-project-dialog/AddProjectDialog";
 import { fetchProjectsByPage } from "../api/projectService";
 import type { FetchProjectsParams } from "../types/FetchProjectsParams";
@@ -15,8 +14,6 @@ import { SearchComponent } from "./search-component/SearchComponent";
 export const Dashboard = () => {
   const [projects, setProjects] = useState<ProjectItem[]>([{} as ProjectItem]);
   const [projectsCount, setProjectsCount] = useState(0);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [bulkMode, setBulkMode] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [loading, setLoading] = useState(true); // loader state
   const [onReload, setOnReload] = useState(0);
@@ -24,55 +21,24 @@ export const Dashboard = () => {
   const [ownerFilter, setOwnerFilter] = useState("");
   const [healthFilter, setHealthFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
-
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-
   // Sorting
   const [sortBy, setSortBy] = useState<string | undefined>(undefined);
   const [sortOrder, setSortOrder] = useState("asc");
 
-  const params: FetchProjectsParams = {
-    page: currentPage || 1,
-    owner: ownerFilter === "all" ? undefined : ownerFilter || undefined,
-    health: healthFilter === "all" ? undefined : healthFilter || undefined,
-    tag: tagFilter === "all" ? undefined : tagFilter || undefined,
-    order: sortBy,
-    dir: sortOrder,
-  };
-
-  // Toggle selection for bulk actions
-  const toggleSelect = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
-    );
-  };
-
-  // Soft delete
-  const handleDelete = (id: number) => {
-    setProjects((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, deleted: true } : p))
-    );
-    setSelectedIds((prev) => prev.filter((pid) => pid !== id));
-  };
-
-  // Recover soft-deleted project
-  const handleRecover = (id: number) => {
-    setProjects((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, deleted: false } : p))
-    );
-  };
-
-  const handleBulkDelete = () => {
-    setProjects((prev) =>
-      prev.map((p) =>
-        selectedIds.includes(p.id) ? { ...p, deleted: true } : p
-      )
-    );
-    setSelectedIds([]);
-    setBulkMode(false);
-  };
+  const params = useMemo<FetchProjectsParams>(
+    () => ({
+      page: currentPage || 1,
+      owner: ownerFilter === "all" ? undefined : ownerFilter || undefined,
+      health: healthFilter === "all" ? undefined : healthFilter || undefined,
+      tag: tagFilter === "all" ? undefined : tagFilter || undefined,
+      order: sortBy,
+      dir: sortOrder,
+    }),
+    [currentPage, ownerFilter, healthFilter, tagFilter, sortBy, sortOrder]
+  );
 
   // Pagination
   const totalPages = Math.ceil(projectsCount / pageSize);
@@ -89,7 +55,6 @@ export const Dashboard = () => {
       setLoading(false);
     }
   }, []);
-  console.log(onReload, "onReload");
 
   useEffect(() => {
     console.log(onReload);
@@ -102,21 +67,19 @@ export const Dashboard = () => {
     sortOrder,
     sortBy,
     onReload,
+    fetchProjects,
+    params,
   ]);
 
   return (
     <Box sx={{ p: 2 }}>
       {/* Top Bar */}
       <TopAppBar
-        bulkMode={bulkMode}
-        setBulkMode={setBulkMode}
-        handleBulkDelete={handleBulkDelete}
-        selectedIds={selectedIds}
         setOpenAddDialog={setOpenAddDialog}
         loading={loading}
         setOnReload={setOnReload}
       />
-      <SearchComponent setProjects={setProjects}/>
+      <SearchComponent setProjects={setProjects} />
       {/* Filters + Sorting */}
       <FilteredSortingBar
         ownerFilter={ownerFilter}
@@ -147,11 +110,6 @@ export const Dashboard = () => {
           {/* Card Grid */}
           <ProjectCardWrapper
             projects={projects}
-            handleDelete={handleDelete}
-            handleRecover={handleRecover}
-            toggleSelect={toggleSelect}
-            bulkMode={bulkMode}
-            selectedIds={selectedIds}
             setOnReload={setOnReload}
           />
           {/* Pagination */}
@@ -161,7 +119,6 @@ export const Dashboard = () => {
             currentPage={currentPage}
           />
           {/* Bulk mode indicator */}
-          <BulkModeIndicator bulkMode={bulkMode} selectedIds={selectedIds} />
         </>
       )}
       <AddProjectDialog
