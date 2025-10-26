@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback, useMemo } from "react";
+import React, { useState, memo, useCallback } from "react";
 import { Card, CardHeader, IconButton, Tooltip, Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { ProjectCardDetailsDialog } from "../project-card-details/ProjectCardDetailsDialog";

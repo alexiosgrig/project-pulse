@@ -40,7 +40,7 @@ export const updateProject = async (
   return response.data;
 };
 
-export const deleteProject = async (id: number): Promise<void> => {
+export const deleteProject = async (id: number | undefined): Promise<void> => {
   await api.delete(`/${id}/`);
 };
 

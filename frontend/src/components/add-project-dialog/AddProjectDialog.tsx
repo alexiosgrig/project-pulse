@@ -16,9 +16,10 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
-import type { ProjectItem, TeamMember } from "../../types/ProjectItem";
+import type { Health, ProjectItem, TeamMember } from "../../types/ProjectItem";
 import type { AddProjectDialogProps } from "../../types/props/AddProjectDialogProps";
 import { addProject } from "../../api/projectService";
+import { ProjectHealthEnum } from "../../enums/ProjectHealthEnum";
 
 export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
   open,
@@ -33,7 +34,7 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
     milestones: 0,
     team: [{ role: "Project Manager", capacity: 1 }],
     tags: [] as string[],
-    health: "Good",
+    health: "Good" as Health,
     recentActivities: [] as string[],
     deleted: false,
     version: 1,
@@ -43,9 +44,10 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
   const handleTeamChange = useCallback((
     index: number,
     key: keyof TeamMember,
-    value: any
+    value: never | string
   ) => {
     const newTeam = [...form.team];
+    //@ts-ignore
     newTeam[index][key] = value;
     setForm({ ...form, team: newTeam });
   }, [form]);
@@ -72,9 +74,9 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
 
   // --- Generic field change ---
   const handleChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<any>
   ) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked} = e.target;
     setForm((prev) => ({
       ...prev,
       [name]:
@@ -121,7 +123,7 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
       milestones: 0,
       team: [{ role: "Project Manager", capacity: 1 }],
       tags: [],
-      health: "Good",
+      health: ProjectHealthEnum.good,
       recentActivities: [],
       deleted: false,
       version: 1,
@@ -230,7 +232,7 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(({
                 type="number"
                 value={member.capacity}
                 onChange={(e) =>
-                  handleTeamChange(idx, "capacity", +e.target.value)
+                  handleTeamChange(idx, "capacity", e.target.value)
                 }
                 sx={{ width: 120 }}
               />
