@@ -10,7 +10,7 @@ export const ProjectCardDelete: React.FC<ProjectCardDeleteProps> = memo(
       try {
         await deleteProject(project.id);
       } catch (error) {
-        console.warn(error);
+        console.error(error);
       }
       setOnReload((prev) => prev + 1);
     }, [project.id, setOnReload]);

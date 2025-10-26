@@ -57,7 +57,6 @@ export const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    console.log(onReload);
     fetchProjects(params);
   }, [
     currentPage,

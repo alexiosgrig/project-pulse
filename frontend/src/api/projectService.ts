@@ -3,11 +3,14 @@ import type { ProjectItem } from "../types/ProjectItem";
 import type { PaginatedProjectsResponse } from "../types/PaginatedProjectsResponse";
 import type { FetchProjectsParams } from "../types/FetchProjectsParams";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/", // change to your backend URL
+  baseURL: `${apiUrl}/api/`, // change to your backend URL
   headers: { "Content-Type": "application/json" },
 });
 
+// For cases you need to fetch all the projects
 export const fetchProjects = async (
   params: FetchProjectsParams
 ): Promise<PaginatedProjectsResponse> => {
@@ -27,7 +30,7 @@ export const fetchProjectsByPage = async (
 export const addProject = async (
   project: ProjectItem
 ): Promise<ProjectItem> => {
-  const response = await api.post("/projects", project);
+  const response = await api.post("/projects/", project);
   return response.data;
 };
 

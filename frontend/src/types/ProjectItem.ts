@@ -13,13 +13,11 @@ export interface ProjectItem {
   description: string;
   summary: string;
   owner: string;
-  lastUpdated: string;
+  last_updated: string;
   progress: number; // derived from milestones
   milestones: number;
   team: TeamMember[];
   tags: string[];
   health: Health;
   recentActivities: string[];
-  deleted?: boolean;
-  version: number;
 }

@@ -15,7 +15,7 @@ export const SearchComponent: React.FC<SearchComponentProps> = ({
         const data = await searchProject(query);
         setProjects(data.results);
       } catch (err) {
-        console.warn(err);
+        console.error(err);
       }
     };
 

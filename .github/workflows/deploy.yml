@@ -1,3 +1,12 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -12,10 +21,10 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U ${{ secrets.POSTGRES_USER }}"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=10
+          --health-cmd "pg_isready -U ${{ secrets.POSTGRES_USER }}"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - uses: actions/checkout@v4
@@ -28,18 +37,21 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
+          pip install --upgrade pip
           pip install -r backend/requirements.txt
 
       - name: Wait for Postgres
         run: |
           for i in {1..10}; do
-            if pg_isready -h localhost -p 5432 > /dev/null; then
+            if pg_isready -h localhost -p 5432 -U $POSTGRES_USER > /dev/null; then
               echo "✅ Postgres is ready!"
               break
             fi
             echo "⏳ Waiting for Postgres..."
             sleep 3
           done
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
 
       - name: Run Django migrations & tests
         env:
