@@ -3,8 +3,10 @@ import type { ProjectItem } from "../types/ProjectItem";
 import type { PaginatedProjectsResponse } from "../types/PaginatedProjectsResponse";
 import type { FetchProjectsParams } from "../types/FetchProjectsParams";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/", // change to your backend URL
+  baseURL: `${apiUrl}/api/`, // change to your backend URL
   headers: { "Content-Type": "application/json" },
 });
 
