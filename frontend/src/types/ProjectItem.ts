@@ -8,7 +8,7 @@ export interface TeamMember {
 export type Health = ProjectHealthEnum.good | ProjectHealthEnum.moderate | ProjectHealthEnum.critical
 
 export interface ProjectItem {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   summary: string;
