@@ -8,6 +8,7 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// For cases you need to fetch all the projects
 export const fetchProjects = async (
   params: FetchProjectsParams
 ): Promise<PaginatedProjectsResponse> => {
@@ -27,7 +28,7 @@ export const fetchProjectsByPage = async (
 export const addProject = async (
   project: ProjectItem
 ): Promise<ProjectItem> => {
-  const response = await api.post("/projects", project);
+  const response = await api.post("/projects/", project);
   return response.data;
 };
 
