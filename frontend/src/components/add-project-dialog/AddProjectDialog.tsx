@@ -12,27 +12,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import type { ProjectItem } from "../../types/ProjectItem";
 import type { AddProjectDialogProps } from "../../types/props/AddProjectDialogProps";
 import { addProject } from "../../api/projectService";
-import { ProjectHealthEnum } from "../../enums/ProjectHealthEnum";
 import { FormTextField } from "../form-controlled-components/form-text-field/FormTextField";
 import { FormTagInput } from "../form-controlled-components/form-tag-input/FormTagInput";
 import { FormArrayField } from "../form-controlled-components/form-array-field/FormArrayField";
 
 export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(
   ({ open, onClose }) => {
-    const methods = useForm<ProjectItem>({
-      defaultValues: {
-        title: "",
-        description: "",
-        summary: "",
-        owner: "",
-        progress: 0,
-        milestones: 0,
-        team: [{ role: "", capacity: 0 }],
-        tags: [],
-        health: ProjectHealthEnum.good,
-        recentActivities: [],
-      },
-    });
+    const methods = useForm<ProjectItem>();
 
     const { handleSubmit, reset } = methods;
 
@@ -70,14 +56,16 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(
                 name="progress"
                 label="Progress (%)"
                 type="number"
+                required
               />
               <FormTextField
                 name="milestones"
                 label="Milestones"
                 type="number"
+                required
               />
 
-              <FormTextField name="health" label="Health" select>
+              <FormTextField name="health" label="Health" select required>
                 <MenuItem value="Good">Good</MenuItem>
                 <MenuItem value="Moderate">Moderate</MenuItem>
                 <MenuItem value="Critical">Critical</MenuItem>
