@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { ProjectHealthEnum } from "../../enums/ProjectHealthEnum";
 import type { ProjectCardContentProps } from "../../types/props/ProjectCardContentProps";
+import dayjs from "dayjs";
 
 export const ProjectCardContent: React.FC<ProjectCardContentProps> = memo(
   ({ project }) => {
@@ -22,11 +23,27 @@ export const ProjectCardContent: React.FC<ProjectCardContentProps> = memo(
       }
     }, [project.health]);
 
+    const formattedDate = useMemo(() => {
+      if (!project.last_updated) return null;
+      return dayjs(project.last_updated).format("MMM D, YYYY"); // e.g., "Oct 26, 2025"
+    }, [project.last_updated]);
+
     return (
       <CardContent>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           {project.description}
         </Typography>
+
+        {/* Date */}
+        {formattedDate && (
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block", mb: 1 }}
+          >
+            Last Updated: {formattedDate}
+          </Typography>
+        )}
 
         <Typography variant="body2" sx={{ mb: 1 }}>
           Progress: {project.progress}%

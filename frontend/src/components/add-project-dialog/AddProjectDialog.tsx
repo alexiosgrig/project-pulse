@@ -15,6 +15,7 @@ import { addProject } from "../../api/projectService";
 import { FormTextField } from "../form-controlled-components/form-text-field/FormTextField";
 import { FormTagInput } from "../form-controlled-components/form-tag-input/FormTagInput";
 import { FormArrayField } from "../form-controlled-components/form-array-field/FormArrayField";
+import { FormDateField } from "../form-controlled-components/form-date-field/FormDateField";
 
 export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(
   ({ open, onClose }) => {
@@ -70,7 +71,7 @@ export const AddProjectDialog: React.FC<AddProjectDialogProps> = memo(
                 <MenuItem value="Moderate">Moderate</MenuItem>
                 <MenuItem value="Critical">Critical</MenuItem>
               </FormTextField>
-
+              <FormDateField name="date" label="Date" />
               <FormTagInput name="tags" />
               <FormArrayField />
             </Stack>
