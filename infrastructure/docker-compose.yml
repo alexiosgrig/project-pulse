@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: .. # build Django app from here
-      dockerfile: infrastructure/Dockerfile # path to Dockerfile relative to context
+      dockerfile: infrastructure/Dockerfile.backend # path to Dockerfile relative to context
     container_name: django_web
     command: sh -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
@@ -50,6 +50,18 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
       - "9200:9200"
+  
+  # frontend:
+  #   build:
+  #     context: ..                       # Root context so Dockerfile can access /frontend
+  #     dockerfile: infrastructure/Dockerfile.frontend
+  #     args:
+  #       VITE_API_URL: http://web:8000   # Talk to Django container internally
+  #   container_name: react_frontend
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     - web
 
 volumes:
   postgres_data:
