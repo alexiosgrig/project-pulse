@@ -34,14 +34,14 @@ export const addProject = async (
   return response.data;
 };
 
-export const updateProject = async (
-  project: ProjectItem
-): Promise<ProjectItem> => {
-  const response = await api.put(`/projects/${project.id}`, project, {
-    headers: { "If-Match": project.version.toString() },
-  });
-  return response.data;
-};
+// export const updateProject = async (
+//   project: ProjectItem
+// ): Promise<ProjectItem> => {
+//   const response = await api.put(`/projects/${project.id}`, project, {
+//     headers: { "If-Match": project.version.toString() },
+//   });
+//   return response.data;
+// };
 
 export const deleteProject = async (id: number | undefined): Promise<void> => {
   await api.delete(`/${id}/`);
