@@ -20,6 +20,4 @@ export interface ProjectItem {
   tags: string[];
   health: Health;
   recentActivities: string[];
-  deleted?: boolean;
-  version: number;
 }
