@@ -1,25 +1,25 @@
-version: "3.9"
-
 services:
   web:
-    build: .
+    build:
+      context: .. # build Django app from here
+      dockerfile: infrastructure/Dockerfile # path to Dockerfile relative to context
     container_name: django_web
     command: sh -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - ../backend/api:/app
       - static_volume:/app/static
       - media_volume:/app/media
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ../backend/.env
     depends_on:
       - db
       - elasticsearch
 
   db:
     image: postgres:15
-    container_name: ${POSTGRES_DB}_db
+    container_name: ${POSTGRES_DB}
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
