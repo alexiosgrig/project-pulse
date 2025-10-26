@@ -1,6 +1,22 @@
-version: '3.9'
+version: "3.9"
 
 services:
+  web:
+    build: .
+    container_name: django_web
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - elasticsearch
+
   db:
     image: postgres:15
     container_name: ${POSTGRES_DB}_db
@@ -25,6 +41,7 @@ services:
       - "8080:80"
     depends_on:
       - db
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
     environment:
@@ -33,5 +50,8 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
       - "9200:9200"
+
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
