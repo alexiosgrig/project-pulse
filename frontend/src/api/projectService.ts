@@ -35,7 +35,7 @@ export const addProject = async (
 };
 
 export const deleteProject = async (id: number | undefined): Promise<void> => {
-  await api.delete(`/${id}/`);
+  await api.delete(`/projects/${id}/`);
 };
 
 export const searchProject = async (
